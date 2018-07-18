@@ -9,9 +9,31 @@ namespace HumaneSociety
     public static class Query
     {
         private static HumaneSocietyDataContext db = new HumaneSocietyDataContext(@"C:\Program Files\Microsoft SQL Server\MSSQL14.MSSQLSERVER\MSSQL\DATA\HumaneSociety.mdf");
-        public static void RunEmployeeQueries(Employee employee, string somestring)
+        public static void RunEmployeeQueries(Employee employee, string action)
         {
-
+            switch (action)
+            {
+                case "create":
+                    db.Employees.InsertOnSubmit(employee);
+                    break;
+                case "read":
+                    var readEmployee = db.Employees.Where(e => e.EmployeeNumber == employee.EmployeeNumber).Single();
+                    UserInterface.DisplayEmployeeInfo(readEmployee);
+                    break;
+                case "update":
+                    var updateEmployee = db.Employees.Where(e => e.UserName == employee.UserName).Single();
+                    updateEmployee.FirstName = employee.FirstName;
+                    updateEmployee.LastName = employee.LastName;
+                    updateEmployee.EmployeeId = employee.EmployeeId;
+                    updateEmployee.Email = employee.Email;
+                    SubmitDBChanges();
+                    break;
+                case "delete":
+                    db.Employees.DeleteOnSubmit(employee);
+                    break;
+                default:
+                    break;
+            }
         }
         public static void SubmitDBChanges()
         {
@@ -26,8 +48,10 @@ namespace HumaneSociety
         }
         public static Room GetRoom(int animalID)
         {
-            Room room = new Room();
-            room.AnimalId = animalID;
+            Room room = new Room
+            {
+                AnimalId = animalID
+            };
             db.Rooms.InsertOnSubmit(room);
             SubmitDBChanges();
             return room;
@@ -66,33 +90,28 @@ namespace HumaneSociety
         }
         public static List<Adoption> GetUserAdoptionStatus(Client client)
         {
-            // TODO: Complete Method
-            List<Adoption> adoptions = new List<Adoption>();
-            //var adoptionList = db.Clients.Where(x => x.ClientId = x.Adoptions.Cl);
-            //foreach(Adoption a in adoptionList)
-            //{
-            //    adoptions.Add(a);
-            //}
-            return adoptions;
+            var adoptions = db.Adoptions.Where(c => c.ClientId == client.ClientId);
+            return adoptions.ToList();
         }
         public static Animal GetAnimalByID(int iD)
         {
-            Animal a = new Animal();
-            return a;
+           
         }
         public static void Adopt(Animal animal, Client client)
         {
-
+            var Animal = db.Animals.Where(s => s.AnimalId == animal.AnimalId).Single();
+            Animal.AdoptionStatus = "Adopted";
+            SubmitDBChanges();
         }
         public static List<Client> RetrieveClients()
         {
-            List<Client> a = new List<Client>();
-            return a;
+            var clients = db.Clients.ToList();
+            return clients;
         }
         public static List<USState> GetStates()
         {
-            List<USState> a = new List<USState>();
-            return a;
+            var states = db.USStates.ToList();
+            return states;
         }
         public static void updateClient(Client client)
         {
@@ -124,8 +143,7 @@ namespace HumaneSociety
         }
         public static List<AnimalShot> GetShots(Animal animal)
         {
-            List<AnimalShot> s = new List<AnimalShot>();
-            return s;
+           
         }
         public static void UpdateShot(string shot, Animal animal)
         {
@@ -133,43 +151,55 @@ namespace HumaneSociety
         }
         public static void EnterUpdate(Animal animal, Dictionary<int,string> update)
         {
-
+            var updateAnimal = db.Animals.Where(a => a.AnimalId == animal.AnimalId).Single();
+            
         }
         public static Species GetSpecies()
         {
-            Species s = new Species();
-            return s;
+            var Species = db.Species.Single();
+            return Species;
         }
         public static DietPlan GetDietPlan()
         {
-            DietPlan d = new DietPlan();
-            return d;
+            var dietPlan = db.DietPlans.Single();
+            return dietPlan;
         }
         public static void AddAnimal(Animal animal)
         {
-
+            db.Animals.InsertOnSubmit(animal);
+            SubmitDBChanges();
         }
         public static void RemoveAnimal(Animal animal)
         {
-
+            var removeAnimals = db.Animals.Where(r => r.AnimalId == animal.AnimalId).Single();
+            db.Animals.DeleteOnSubmit(removeAnimals);
+            SubmitDBChanges();
         }
         public static Employee EmployeeLogin(string userName, string password)
         {
-            Employee e = new Employee();
-            return e;
+            var employee = db.Employees.Where(e => e.UserName == userName && e.Password == password).Single();
+            return employee;
+
         }
         public static Employee RetrieveEmployeeUser(string email, int employeeNumber)
         {
-            Employee q = new Employee();
-            return q;
+            var employeeUser = db.Employees.Where(e => e.Email == email && e.EmployeeNumber == employeeNumber).Single();
+            return employeeUser;
         }
         public static void AddUsernameAndPassword(Employee employee)
         {
-
+            db.Employees.InsertOnSubmit(employee);
         }
         public static bool CheckEmployeeUserNameExist(string userName)
         {
-            return true;
+            var exists = db.Clients.Where(s => s.UserName == userName);
+            if (exists != null)
+            {
+                return true;
+            }
+            else
+                return false;
+
         }
     }
 }
