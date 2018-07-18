@@ -8,34 +8,72 @@ namespace HumaneSociety
 {
     public static class Query
     {
-        
+        private static HumaneSocietyDataContext db = new HumaneSocietyDataContext(@"C:\Program Files\Microsoft SQL Server\MSSQL14.MSSQLSERVER\MSSQL\DATA\HumaneSociety.mdf");
         public static void RunEmployeeQueries(Employee employee, string somestring)
         {
 
         }
+        public static void SubmitDBChanges()
+        {
+            try
+            {
+                db.SubmitChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
         public static Room GetRoom(int animalID)
         {
             Room room = new Room();
+            room.AnimalId = animalID;
+            db.Rooms.InsertOnSubmit(room);
+            SubmitDBChanges();
             return room;
         }
         public static List<Adoption> GetPendingAdoptions()
-        {
-            List<Adoption> a = new List<Adoption>();
-            return a;
+        {;
+            var adoption = db.Adoptions.Where(m => m.ApprovalStatus == "Pending");
+            return adoption.ToList();
         }
         public static void UpdateAdoption(bool isAdopted, Adoption adoption)
         {
-
+            var adopted = db.Adoptions.Where(a => a.AdoptionId == adoption.AdoptionId).SingleOrDefault();
+            
+            if(isAdopted)
+            {
+                adopted.ApprovalStatus = "Approved";
+            }
+            else
+            {
+                adopted.ApprovalStatus = "Pending";
+            }
+            
+            SubmitDBChanges();
         }
         public static Client GetClient(string userName, string password)
         {
-            Client client = new Client();
-            return client;
+            var client = db.Clients.Where(c => c.UserName == userName && c.Password == password).SingleOrDefault();
+            if(client != default(Client))
+            {
+                return client;
+            }
+            else
+            {
+                throw new Exception();
+            }
         }
         public static List<Adoption> GetUserAdoptionStatus(Client client)
         {
-            List<Adoption> adoptionlist = new List<Adoption>();
-            return adoptionlist;
+            // TODO: Complete Method
+            List<Adoption> adoptions = new List<Adoption>();
+            //var adoptionList = db.Clients.Where(x => x.ClientId = x.Adoptions.Cl);
+            //foreach(Adoption a in adoptionList)
+            //{
+            //    adoptions.Add(a);
+            //}
+            return adoptions;
         }
         public static Animal GetAnimalByID(int iD)
         {
