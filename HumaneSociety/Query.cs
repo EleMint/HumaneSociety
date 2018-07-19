@@ -17,15 +17,19 @@ namespace HumaneSociety
             {
                 case "create":
                     cRUD_Delegate = GetCreate;
+                    cRUD_Delegate(employee);
                     break;
                 case "read":
                     cRUD_Delegate = GetRead;
+                    cRUD_Delegate(employee);
                     break;
                 case "update":
                     cRUD_Delegate = GetUpdate;
+                    cRUD_Delegate(employee);
                     break;
                 case "delete":
                     cRUD_Delegate = GetDelete;
+                    cRUD_Delegate(employee);
                     break;
                 default:
                     break;
@@ -34,6 +38,7 @@ namespace HumaneSociety
         public static void GetCreate(Employee employee)
         {
             db.Employees.InsertOnSubmit(employee);
+            SubmitDBChanges();
         }
         public static void GetRead(Employee employee)
         {
@@ -119,7 +124,16 @@ namespace HumaneSociety
         public static void Adopt(Animal animal, Client client)
         {
             var Animal = db.Animals.Where(s => s.AnimalId == animal.AnimalId).Single();
-            Animal.AdoptionStatus = "Adopted";
+            Animal.AdoptionStatus = "adopted";
+            Adoption adoption = new Adoption
+            {
+                ClientId = client.ClientId,
+                AnimalId = animal.AnimalId,
+                ApprovalStatus = "adopted",
+                AdoptionFee = 50,
+                PaymentCollected = true
+            };
+            db.Adoptions.InsertOnSubmit(adoption);
             SubmitDBChanges();
         }
         public static List<Client> RetrieveClients()
@@ -166,26 +180,31 @@ namespace HumaneSociety
         {
             var clientToUpdate = db.Clients.Where(c => c.ClientId == client.ClientId).Single();
             clientToUpdate.Email = client.Email;
+            SubmitDBChanges();
         }
         public static void UpdateAddress(Client client)
         {
             var clientToUpdate = db.Clients.Where(c => c.ClientId == client.ClientId).Single();
             clientToUpdate.Address = client.Address;
+            SubmitDBChanges();
         }
         public static void UpdateUsername(Client client)
         {
             var clientToUpdate = db.Clients.Where(c => c.ClientId == client.ClientId).Single();
             clientToUpdate.UserName = client.UserName;
+            SubmitDBChanges();
         }
         public static void UpdateFirstName(Client client)
         {
             var clientToUpdate = db.Clients.Where(c => c.ClientId == client.ClientId).Single();
             clientToUpdate.FirstName = client.FirstName;
+            SubmitDBChanges();
         }
         public static void UpdateLastName(Client client)
         {
             var clientToUpdate = db.Clients.Where(c => c.ClientId == client.ClientId).Single();
             clientToUpdate.LastName = client.LastName;
+            SubmitDBChanges();
         }
         public static List<AnimalShot> GetShots(Animal animal)
         {
@@ -246,12 +265,15 @@ namespace HumaneSociety
         }
         public static void AddUsernameAndPassword(Employee employee)
         {
-            db.Employees.InsertOnSubmit(employee);
+            var employeeToUpdate = db.Employees.Where(c => c.EmployeeNumber == employee.EmployeeNumber).Single();
+            employeeToUpdate.UserName = employee.UserName;
+            employeeToUpdate.Password = employee.Password;
+            SubmitDBChanges();
         }
         public static bool CheckEmployeeUserNameExist(string userName)
         {
-            var exists = db.Clients.Where(s => s.UserName == userName);
-            if (exists != null)
+            var exists = db.Employees.Where(s => s.UserName == userName).SingleOrDefault();
+            if (exists != default(Employee))
             {
                 return true;
             }
