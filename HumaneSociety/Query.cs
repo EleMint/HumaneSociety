@@ -70,6 +70,21 @@ namespace HumaneSociety
                 Console.WriteLine(e);
             }
         }
+        public static void AssignRoom(Animal animal)
+        {
+            var nextAvailibleRoom = db.Rooms.Where(r => r.AnimalId == null).SingleOrDefault();
+            if(nextAvailibleRoom != default(Room))
+            {
+                nextAvailibleRoom.AnimalId = animal.AnimalId;
+            }
+            else
+            {
+                Room newRoom = new Room();
+                newRoom.AnimalId = animal.AnimalId;
+                db.Rooms.InsertOnSubmit(newRoom);
+            }
+            SubmitDBChanges();
+        }
         public static Room GetRoom(int animalID)
         {
             var room = db.Rooms.Where(r => r.AnimalId == animalID).Single();
@@ -276,8 +291,10 @@ namespace HumaneSociety
         }
         public static void RemoveAnimal(Animal animal)
         {
-            var removeAnimals = db.Animals.Where(r => r.AnimalId == animal.AnimalId).Single();
-            db.Animals.DeleteOnSubmit(removeAnimals);
+            var removeAnimal = db.Animals.Where(r => r.AnimalId == animal.AnimalId).Single();
+            db.Animals.DeleteOnSubmit(removeAnimal);
+            var removeAnimalRoom = db.Rooms.Where(r => r.AnimalId == animal.AnimalId).Single();
+            db.Rooms.DeleteOnSubmit(removeAnimalRoom);
             SubmitDBChanges();
         }
         public static Employee EmployeeLogin(string userName, string password)
