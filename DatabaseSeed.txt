@@ -1,0 +1,39 @@
+INSERT INTO Species (Name) 
+ Values('Dog'),
+ ('Cat'),
+ ('Hamster'),
+ ('Horse'),
+ ('Bird');
+
+INSERT INTO DietPlans (Name, FoodType, FoodAmountInCups)
+ Values('Keto', 'Beef', 3),
+ ('South_Beach', 'Fats', 2),
+ ('Vegan', 'Tofu', 3),
+ ('Atkins', 'Chicken', 4),
+ ('Photosynthesis', 'Sun', 1000);
+
+INSERT INTO Animals (Name, SpeciesId, Weight, Age, DietPlanId, Demeanor, KidFriendly, PetFriendly, Gender, AdoptionStatus)
+ Values('Fido', 1, 100, 10, 1, '"Fido"', 0, 0, 'Fluid', 'not adopted'),
+ ('Rex', 4, 2000, 15, 3, 'War Horse', 0, 0, 'Brutal Male', 'not adopted'),
+ ('Galactus, Destroyer of Worlds', 2, 15, 6, 4, 'Cosmic Apathy', 1, 0, 'Male', 'not adopted'),
+ ('Ryan', 3, 3, 1, 1, 'Sassy', 0, 0, 'Female', 'not adopted'),
+ ('Falkor', 5, 5, 6, 4, 'Stoic', 0, 0, 'Male', 'not adopted');
+
+INSERT INTO Rooms (AnimalId)
+ Values((SELECT AnimalId FROM Animals Where AnimalId = 1)),
+ ((SELECT AnimalId FROM Animals Where AnimalId = 2)),
+ ((SELECT AnimalId FROM Animals Where AnimalId = 3)),
+ ((SELECT AnimalId FROM Animals Where AnimalId = 4)),
+ ((SELECT AnimalId FROM Animals Where AnimalId = 5)),
+ (null),
+ (null),
+ (null),
+ (null),
+ (null);
+
+INSERT INTO Shots (Name)
+ Values('booster'),
+ ('tetanus'),
+ ('dtap polio'),
+ ('meningitis'),
+ ('vector');

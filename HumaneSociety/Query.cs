@@ -48,12 +48,7 @@ namespace HumaneSociety
         }
         public static Room GetRoom(int animalID)
         {
-            Room room = new Room
-            {
-                AnimalId = animalID
-            };
-            db.Rooms.InsertOnSubmit(room);
-            SubmitDBChanges();
+            var room = db.Rooms.Where(r => r.AnimalId == animalID).Single();
             return room;
         }
         public static List<Adoption> GetPendingAdoptions()
