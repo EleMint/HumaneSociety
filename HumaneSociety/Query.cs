@@ -62,11 +62,11 @@ namespace HumaneSociety
             
             if(isAdopted)
             {
-                adopted.ApprovalStatus = "Approved";
+                adopted.ApprovalStatus = "Adopted";
             }
             else
             {
-                adopted.ApprovalStatus = "Pending";
+                adopted.ApprovalStatus = "Not Adopted";
             }
             
             SubmitDBChanges();
@@ -115,7 +115,12 @@ namespace HumaneSociety
         }
         public static void updateClient(Client client)
         {
-
+            var updateClient = db.Clients.Where(s => s.ClientId == client.ClientId).Single();
+            updateClient.Income = client.Income;
+            updateClient.HomeSquareFootage = client.HomeSquareFootage;
+            updateClient.NumberOfKids = client.NumberOfKids;
+            updateClient.Password = client.Password;
+            SubmitDBChanges();
         }
         public static void AddNewClient(string firstName, string lastName, string userName, string password, string email, string address, int zipCode, int state)
         {

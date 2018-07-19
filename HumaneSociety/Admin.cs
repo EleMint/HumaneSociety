@@ -8,7 +8,7 @@ namespace HumaneSociety
 {
     class Admin : User
     {
-
+        public delegate void CRUD_Delegate();
 
 
 
@@ -36,31 +36,31 @@ namespace HumaneSociety
         }
         protected void RunInput(string input)
         {
+            CRUD_Delegate cRUD_Delegate;
             if(input == "1" || input.ToLower() == "create")
             {
-                AddEmployee();
-                RunUserMenus();
+                cRUD_Delegate = AddEmployee;
             }
             else if(input == "2" || input.ToLower() == "delete")
             {
-                RemoveEmployee();
-                RunUserMenus();
+                cRUD_Delegate = RemoveEmployee;
             }
             else if(input == "3" || input.ToLower() == "read")
             {
-                ReadEmployee();
-                RunUserMenus();
-            }
+                cRUD_Delegate = ReadEmployee;
+            } 
             else if (input == "4" || input.ToLower() == "update")
             {
-                UpdateEmployee();
-                RunUserMenus();
+                cRUD_Delegate = UpdateEmployee;
             }
             else
             {
                 UserInterface.DisplayUserOptions("Input not recognized please try again or type exit");
                 RunUserMenus();
+                cRUD_Delegate = ReadEmployee;
             }
+            cRUD_Delegate();
+            RunUserMenus();
         }
 
         private void UpdateEmployee()
