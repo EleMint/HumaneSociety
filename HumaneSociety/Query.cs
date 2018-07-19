@@ -8,32 +8,51 @@ namespace HumaneSociety
 {
     public static class Query
     {
-        private static HumaneSocietyDataContext db = new HumaneSocietyDataContext(@"C:\Program Files\Microsoft SQL Server\MSSQL14.MSSQLSERVER\MSSQL\DATA\HumaneSociety.mdf");
+        private static HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+        delegate void CRUD_Delegate(Employee employee);
         public static void RunEmployeeQueries(Employee employee, string action)
         {
+            CRUD_Delegate cRUD_Delegate;
             switch (action)
             {
                 case "create":
-                    db.Employees.InsertOnSubmit(employee);
+                    cRUD_Delegate = GetCreate;
                     break;
                 case "read":
-                    var readEmployee = db.Employees.Where(e => e.EmployeeNumber == employee.EmployeeNumber).Single();
-                    UserInterface.DisplayEmployeeInfo(readEmployee);
+                    cRUD_Delegate = GetRead;
                     break;
                 case "update":
-                    var updateEmployee = db.Employees.Where(e => e.UserName == employee.UserName).Single();
-                    updateEmployee.FirstName = employee.FirstName;
-                    updateEmployee.LastName = employee.LastName;
-                    updateEmployee.EmployeeId = employee.EmployeeId;
-                    updateEmployee.Email = employee.Email;
-                    SubmitDBChanges();
+                    cRUD_Delegate = GetUpdate;
                     break;
                 case "delete":
-                    db.Employees.DeleteOnSubmit(employee);
+                    cRUD_Delegate = GetDelete;
                     break;
                 default:
                     break;
             }
+        }
+        public static void GetCreate(Employee employee)
+        {
+            db.Employees.InsertOnSubmit(employee);
+        }
+        public static void GetRead(Employee employee)
+        {
+            var readEmployee = db.Employees.Where(e => e.EmployeeNumber == employee.EmployeeNumber).Single();
+            UserInterface.DisplayEmployeeInfo(readEmployee);
+        }
+        public static void GetUpdate(Employee employee)
+        {
+            var updateEmployee = db.Employees.Where(e => e.UserName == employee.UserName).Single();
+            updateEmployee.FirstName = employee.FirstName;
+            updateEmployee.LastName = employee.LastName;
+            updateEmployee.EmployeeId = employee.EmployeeId;
+            updateEmployee.Email = employee.Email;
+            SubmitDBChanges();
+        }
+        public static void GetDelete(Employee employee)
+        {
+            db.Employees.DeleteOnSubmit(employee);
+            SubmitDBChanges();
         }
         public static void SubmitDBChanges()
         {
@@ -192,7 +211,6 @@ namespace HumaneSociety
         public static void EnterUpdate(Animal animal, Dictionary<int,string> update)
         {
             var updateAnimal = db.Animals.Where(a => a.AnimalId == animal.AnimalId).Single();
-            
         }
         public static Species GetSpecies()
         {
@@ -239,7 +257,6 @@ namespace HumaneSociety
             }
             else
                 return false;
-
         }
     }
 }

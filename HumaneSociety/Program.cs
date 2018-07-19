@@ -10,6 +10,13 @@ namespace HumaneSociety
     {
         static void Main(string[] args)
         {
+            //HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            //var animals = db.Animals;
+            //foreach(Animal a in animals)
+            //{
+            //    Console.WriteLine(a.Name);
+            //}
+            //Console.ReadLine();
             PointOfEntry.Run();
         }
     }
