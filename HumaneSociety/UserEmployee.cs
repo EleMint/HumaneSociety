@@ -244,15 +244,41 @@ namespace HumaneSociety
         {
             Console.Clear();
             Animal animal = new Animal();
-            animal.Species = Query.GetSpecies();
+            string species = UserInterface.GetStringData("species", "the animal's");
+            species = CheckSpecies(species);
+            animal.Species = Query.GetSpecies(species);
             animal.Name = UserInterface.GetStringData("name", "the animal's");
             animal.Age = UserInterface.GetIntegerData("age", "the animal's");
             animal.Demeanor = UserInterface.GetStringData("demeanor", "the animal's");
             animal.KidFriendly = UserInterface.GetBitData("the animal", "child friendly");
             animal.PetFriendly = UserInterface.GetBitData("the animal", "pet friendly");
             animal.Weight = UserInterface.GetIntegerData("the animal", "the weight of the");
-            animal.DietPlan= Query.GetDietPlan();
+            string dietPlan = UserInterface.GetStringData("diet plan", "the animal's");
+            dietPlan = CheckDietPlan(dietPlan);
+            animal.DietPlan = Query.GetDietPlan();
             Query.AddAnimal(animal);
+        }
+        public string CheckDietPlan(string dietPlan)
+        {
+            if (!Query.CheckDietPlan(dietPlan))
+            {
+                DietPlan newDietPlan = new DietPlan();
+                newDietPlan.Name = dietPlan;
+                newDietPlan.FoodType = UserInterface.GetUserInput("Please input the type of food: ");
+                newDietPlan.FoodAmountInCups = int.Parse(UserInterface.GetUserInput("Amount of food in Cups"));
+                Query.AddDietPlan(newDietPlan);
+            }
+            return dietPlan;
+        }
+        public string CheckSpecies(string species)
+        {
+            if(!Query.CheckSpecies(species))
+            {
+                Species newSpecies = new Species();
+                newSpecies.Name = species;
+                Query.AddSpecies(newSpecies);
+            }  
+            return species;
         }
         protected override void LogInPreExistingUser()
         {

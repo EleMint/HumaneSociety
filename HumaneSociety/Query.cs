@@ -231,10 +231,38 @@ namespace HumaneSociety
         {
             var updateAnimal = db.Animals.Where(a => a.AnimalId == animal.AnimalId).Single();
         }
-        public static Species GetSpecies()
+        public static bool CheckDietPlan(string dietPlan)
         {
-            var Species = db.Species.Single();
-            return Species;
+            var inputDietPlan = db.DietPlans.Where(d => d.Name == dietPlan).SingleOrDefault();
+            if (inputDietPlan != default(DietPlan))
+            {
+                return true;
+            }
+            return false;
+        }
+        public static void AddDietPlan(DietPlan dietPlan)
+        {
+            db.DietPlans.InsertOnSubmit(dietPlan);
+            SubmitDBChanges();
+        }
+        public static bool CheckSpecies(string species)
+        {
+            var inputSpecies = db.Species.Where(s => s.Name == species).SingleOrDefault();
+            if(inputSpecies != default(Species))
+            {
+                return true;
+            }
+            return false;
+        }
+        public static void AddSpecies(Species species)
+        {
+            db.Species.InsertOnSubmit(species);
+            SubmitDBChanges();
+        }
+        public static Species GetSpecies(string species)
+        {
+            var returnSpecies = db.Species.Where(a => a.Name == species).Single();
+            return returnSpecies;
         }
         public static DietPlan GetDietPlan()
         {
