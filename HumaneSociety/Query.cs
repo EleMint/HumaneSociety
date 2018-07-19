@@ -264,10 +264,10 @@ namespace HumaneSociety
             var returnSpecies = db.Species.Where(a => a.Name == species).Single();
             return returnSpecies;
         }
-        public static DietPlan GetDietPlan()
+        public static DietPlan GetDietPlan(string dietPlan)
         {
-            var dietPlan = db.DietPlans.Single();
-            return dietPlan;
+            var returnDietPlan = db.DietPlans.Where(d => d.Name == dietPlan).Single();
+            return returnDietPlan;
         }
         public static void AddAnimal(Animal animal)
         {

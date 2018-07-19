@@ -255,7 +255,7 @@ namespace HumaneSociety
             animal.Weight = UserInterface.GetIntegerData("the animal", "the weight of the");
             string dietPlan = UserInterface.GetStringData("diet plan", "the animal's");
             dietPlan = CheckDietPlan(dietPlan);
-            animal.DietPlan = Query.GetDietPlan();
+            animal.DietPlan = Query.GetDietPlan(dietPlan);
             Query.AddAnimal(animal);
         }
         public string CheckDietPlan(string dietPlan)
@@ -265,7 +265,7 @@ namespace HumaneSociety
                 DietPlan newDietPlan = new DietPlan();
                 newDietPlan.Name = dietPlan;
                 newDietPlan.FoodType = UserInterface.GetUserInput("Please input the type of food: ");
-                newDietPlan.FoodAmountInCups = int.Parse(UserInterface.GetUserInput("Amount of food in Cups"));
+                newDietPlan.FoodAmountInCups = int.Parse(UserInterface.GetUserInput("Amount of food in Cups: "));
                 Query.AddDietPlan(newDietPlan);
             }
             return dietPlan;
