@@ -119,7 +119,7 @@ namespace HumaneSociety
             return true;
         }
         public static List<Adoption> GetPendingAdoptions()
-        {;
+        {
             var adoption = db.Adoptions.Where(m => m.ApprovalStatus == "Pending");
             return adoption.ToList();
         }
@@ -150,6 +150,51 @@ namespace HumaneSociety
                 throw new Exception();
             }
         }
+        public static List<AnimalShot> CheckShotsNeededById(Animal animal)
+        {
+            var animalShots = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).Select(s => s);
+            return animalShots.ToList();
+        }
+        public static void GiveShots(Animal animal, List<AnimalShot> shotsNotRecieved)
+        {
+            var shots = db.Shots;
+            DateTime dateTime = DateTime.Now;
+            if (shotsNotRecieved.Count < 1)
+            {
+                var shotsList = shots.ToList();
+                for(int i = 0; i<5; i++)
+                {
+                    AnimalShot animalShot = new AnimalShot();
+                    animalShot.ShotId = shotsList[i].ShotId;
+                    animalShot.AnimalId = animal.AnimalId;
+                    animalShot.DateReceived = dateTime.Date;
+                    db.AnimalShots.InsertOnSubmit(animalShot);
+                }
+            }
+            else
+            {
+                foreach (Shot newShot in shots)
+                {
+                    foreach (AnimalShot shot in shotsNotRecieved)
+                    {
+                        if (shot.ShotId != newShot.ShotId)
+                        {
+                            AnimalShot updateShots = new AnimalShot();
+                            updateShots.ShotId = newShot.ShotId;
+                            updateShots.AnimalId = shot.AnimalId;
+                            updateShots.DateReceived = dateTime.Date;
+                            db.AnimalShots.InsertOnSubmit(updateShots);
+                        }
+                    }
+                }
+            }
+            SubmitDBChanges();
+        }
+        public static List<Shot> GetShotNames()
+        {
+            var shots = db.Shots.Select(s => s);
+            return shots.ToList();
+        }
         public static List<Adoption> GetUserAdoptionStatus(Client client)
         {
             var adoptions = db.Adoptions.Where(c => c.ClientId == client.ClientId);
@@ -167,13 +212,13 @@ namespace HumaneSociety
         public static void Adopt(Animal animal, Client client)
         {
             var Animal = db.Animals.Where(s => s.AnimalId == animal.AnimalId).Single();
-            Animal.AdoptionStatus = "adopted";
+            Animal.AdoptionStatus = "Pending";
             Adoption adoption = new Adoption
             {
                 ClientId = client.ClientId,
                 AnimalId = animal.AnimalId,
-                ApprovalStatus = "adopted",
-                AdoptionFee = 50,
+                ApprovalStatus = "Pending",
+                AdoptionFee = 75,
                 PaymentCollected = true
             };
             db.Adoptions.InsertOnSubmit(adoption);

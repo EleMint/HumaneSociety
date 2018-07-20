@@ -26,7 +26,7 @@ namespace HumaneSociety
         }
         protected override void RunUserMenus()
         {
-            List<string> options = new List<string>() { "What would you like to do? (select number of choice)", "1. Add animal", "2. Remove Anmial", "3. Check Animal Status",  "4. Approve Adoption", "5. Diplay Rooms", "6. Move Animal", "7. Bulk Add Animals" };
+            List<string> options = new List<string>() { "What would you like to do? (select number of choice)", "1. Add animal", "2. Remove Anmial", "3. Check Animal Status",  "4. Approve Adoption", "5. Diplay Rooms", "6. Move Animal", "7. Bulk Add Animals", "8. Check Shots" };
             UserInterface.DisplayUserOptions(options);
             string input = UserInterface.GetUserInput();
             RunUserInput(input);
@@ -63,11 +63,36 @@ namespace HumaneSociety
                     BulkAdd();
                     RunUserMenus();
                     return;
+                case "8":
+                    CheckShots();
+                    RunUserMenus();
+                    return;
                 default:
                     UserInterface.DisplayUserOptions("Input not accepted please try again");
                     RunUserMenus();
                     return;
             }
+        }
+        private void CheckShots()
+        {
+            var animal = SearchForAnimal().Single();
+            var shots = Query.CheckShotsNeededById(animal);
+            UserInterface.DisplayAnimal(animal);
+            UserInterface.DisplayUserOptions(shots);
+            if(shots.Count == 5)
+            {
+                UserInterface.DisplayUserOptions($"{animal.Name} is current on all shots");
+            }
+            else
+            {
+                string result = UserInterface.GetUserInput("Would you like to administer remaining shots?").ToLower();
+                if (result == "yes")
+                {
+                    Query.GiveShots(animal, shots);
+                }
+            }
+           
+            RunUserMenus();
         }
         private void BulkAdd()
         {

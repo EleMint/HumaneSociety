@@ -15,6 +15,29 @@ namespace HumaneSociety
                 Console.WriteLine(option);
             }
         }
+        public static void DisplayUserOptions(List<AnimalShot> shots)
+        {
+            List<Shot> listOfShots = Query.GetShotNames();
+            if(shots.Count()== 0)
+            {
+                Console.WriteLine("This animal has no shots");
+            }
+            else
+            {
+                foreach (AnimalShot shot in shots)
+                {
+                    foreach (Shot shotName in listOfShots)
+                    {
+                        if (shot.ShotId == shotName.ShotId)
+                        {
+                            string nameOfShot = shotName.Name;
+                            Console.WriteLine($"Shot Name: {nameOfShot}");
+                        }
+                    }
+                }
+            }
+
+        }
         public static void DisplayUserOptions(string options)
         {
             Console.WriteLine(options);
@@ -88,7 +111,10 @@ namespace HumaneSociety
                 return false;
             }
         }
-
+        internal static void DisplayAnimal(Animal animal)
+        {
+            Console.WriteLine(animal.AnimalId + " " + animal.Name + " " + animal.Species.Name);
+        }
         internal static void DisplayAnimals(List<Animal> animals)
         {
             foreach(Animal animal in animals)
