@@ -7,29 +7,33 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace HumaneSociety
 {
-    //class CSVParse
-    //{
-    //    public void ParseCsv()
-    //    {
-    //        using (TextFieldParser parser = new TextFieldParser(@"D:\DevCodeCamp\Projects\HumaneSociety\animals.csv"))
-    //        {
-    //            parser.TextFieldType = FieldType.Delimited;
-    //            parser.SetDelimiters(",");
-    //            while (!parser.EndOfData)
-    //            {
-    //                string[] fields = parser.ReadFields();
-    //                foreach (string field in fields)
-    //                {
-    //                    Animal newAnimal = new Animal
-    //                    {
-    //                        Name = field,
-    //                        SpeciesId = 
-    //                    };
-    //                    Query.AddAnimal(newAnimal);
-    //                    Query.AssignRoom(newAnimal);
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+    public static class CSVParse
+    {
+        public static void ParseCSV(string filePath)
+        {
+            using (TextFieldParser parser = new TextFieldParser(@filePath))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(",");
+                while (!parser.EndOfData)
+                {
+                    string[] fields = parser.ReadFields();
+                    int counter = 0;
+                    for (int i = 0; i < fields.Length / 13; i++)
+                    {
+                        Animal animal = new Animal();
+                        animal.Name = fields[1 + counter];
+                        animal.Weight = int.Parse(fields[3 + counter]);
+                        animal.Age = int.Parse(fields[4 + counter]);
+                        animal.Demeanor = fields[7 + counter];
+                        animal.KidFriendly = fields[8 + counter] == "1" ? true : false;
+                        animal.PetFriendly = fields[9 + counter] == "1" ? true : false;
+                        animal.AdoptionStatus = fields[11 + counter];
+                        counter += 13;
+                        Query.AddAnimal(animal);
+                    }
+                }
+            }
+        }
+    }
 }

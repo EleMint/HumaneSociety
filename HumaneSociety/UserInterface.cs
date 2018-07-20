@@ -100,7 +100,7 @@ namespace HumaneSociety
         { 
             foreach(Room room in rooms)
             {
-                //Console.WriteLine($"Room Number: {room.RoomId}  AnimalId: {room.AnimalId}  Animal: {room.}");
+                Console.WriteLine($"Room Number: {room.RoomId}  AnimalId: {room.AnimalId}  Animal: {room.AnimalName}");
             }
         }
         internal static int GetIntegerData()
@@ -165,7 +165,6 @@ namespace HumaneSociety
                 return "no";
             }
         }
-
         public static bool GetBitData(string option)
         {
             DisplayUserOptions(option);
@@ -178,6 +177,11 @@ namespace HumaneSociety
             {
                 return false;
             }
+        }
+        public static int AskForRoom(Animal animal)
+        {
+            Console.WriteLine($"What room would you like to move {animal.Name}?");
+            return GetIntegerData();
         }
         public static Dictionary<int, string> EnterSearchCriteria(Dictionary<int, string> searchParameters, string input)
         {

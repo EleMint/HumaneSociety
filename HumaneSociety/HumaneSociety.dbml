@@ -96,6 +96,7 @@
       <Column Name="RoomId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="AnimalId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="AnimalName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="RoomNumber" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="Animal_Room" Member="Animal" ThisKey="AnimalId" OtherKey="AnimalId" Type="Animal" IsForeignKey="true" />
     </Type>
   </Table>

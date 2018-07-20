@@ -26,7 +26,7 @@ namespace HumaneSociety
         }
         protected override void RunUserMenus()
         {
-            List<string> options = new List<string>() { "What would you like to do? (select number of choice)", "1. Add animal", "2. Remove Anmial", "3. Check Animal Status",  "4. Approve Adoption" };
+            List<string> options = new List<string>() { "What would you like to do? (select number of choice)", "1. Add animal", "2. Remove Anmial", "3. Check Animal Status",  "4. Approve Adoption", "5. Diplay Rooms", "6. Move Animal", "7. Bulk Add Animals" };
             UserInterface.DisplayUserOptions(options);
             string input = UserInterface.GetUserInput();
             RunUserInput(input);
@@ -59,15 +59,49 @@ namespace HumaneSociety
                     MoveAnimal();
                     RunUserMenus();
                     return;
+                case "7":
+                    BulkAdd();
+                    RunUserMenus();
+                    return;
                 default:
                     UserInterface.DisplayUserOptions("Input not accepted please try again");
                     RunUserMenus();
                     return;
             }
         }
+        private void BulkAdd()
+        {
+            UserInterface.DisplayUserOptions("Please enter a .csv file path: ");
+            string filePath = UserInterface.GetUserInput();
+            CSVParse.ParseCSV(filePath);
+        }
         private void MoveAnimal()
         {
-
+            var animals = SearchForAnimal().ToList();
+            if (animals.Count > 1)
+            {
+                UserInterface.DisplayUserOptions("Several animals found please refine your search.");
+                UserInterface.DisplayAnimals(animals);
+                UserInterface.DisplayUserOptions("Press enter to continue");
+                Console.ReadLine();
+                return;
+            }
+            else if (animals.Count < 1)
+            {
+                UserInterface.DisplayUserOptions("Animal not found please use different search criteria");
+                return;
+            }
+            var animal = animals[0];
+            Room room;
+            do
+            {
+                int roomNumber = UserInterface.AskForRoom(animal);
+                room = Query.GetRoomById(roomNumber);
+            }
+            while (room == default(Room));
+            Room oldRoom = Query.GetRoom(animal.AnimalId);
+            Query.MoveAnimal(animal, oldRoom, room);
+            RunUserMenus();
         }
         private void DisplayRooms()
         {

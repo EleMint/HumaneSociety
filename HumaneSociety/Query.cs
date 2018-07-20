@@ -81,6 +81,7 @@ namespace HumaneSociety
             {
                 Room newRoom = new Room();
                 newRoom.AnimalId = animal.AnimalId;
+                newRoom.AnimalName = animal.Name;
                 db.Rooms.InsertOnSubmit(newRoom);
             }
             SubmitDBChanges();
@@ -89,6 +90,33 @@ namespace HumaneSociety
         {
             var room = db.Rooms.Where(r => r.AnimalId == animalID).Single();
             return room;
+        }
+        public static void MoveAnimal(Animal animal, Room oldRoom, Room newRoom)
+        {
+            newRoom.AnimalId = animal.AnimalId;
+            newRoom.AnimalName = animal.Name;
+            oldRoom.AnimalId = null;
+            oldRoom.AnimalName = null;
+            SubmitDBChanges();
+        }
+        public static Room GetRoomById(int roomNumber)
+        {
+            if(RoomOpen(roomNumber))
+            {
+                var room = db.Rooms.Where(r => r.RoomNumber == roomNumber).Single();
+                return room;
+            }
+            Room newRoom = new Room();
+            return newRoom;
+        }
+        public static bool RoomOpen(int roomNumber)
+        {
+            var room = db.Rooms.Where(r => r.RoomNumber == roomNumber).SingleOrDefault();
+            if(room != default(Room))
+            {
+                return false;
+            }
+            return true;
         }
         public static List<Adoption> GetPendingAdoptions()
         {;
