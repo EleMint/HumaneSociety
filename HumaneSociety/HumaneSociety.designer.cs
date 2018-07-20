@@ -2153,6 +2153,8 @@ namespace HumaneSociety
 		
 		private System.Nullable<int> _AnimalId;
 		
+		private string _AnimalName;
+		
 		private EntityRef<Animal> _Animal;
 		
     #region Extensibility Method Definitions
@@ -2163,6 +2165,8 @@ namespace HumaneSociety
     partial void OnRoomIdChanged();
     partial void OnAnimalIdChanging(System.Nullable<int> value);
     partial void OnAnimalIdChanged();
+    partial void OnAnimalNameChanging(string value);
+    partial void OnAnimalNameChanged();
     #endregion
 		
 		public Room()
@@ -2211,6 +2215,26 @@ namespace HumaneSociety
 					this._AnimalId = value;
 					this.SendPropertyChanged("AnimalId");
 					this.OnAnimalIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AnimalName", DbType="VarChar(50)")]
+		public string AnimalName
+		{
+			get
+			{
+				return this._AnimalName;
+			}
+			set
+			{
+				if ((this._AnimalName != value))
+				{
+					this.OnAnimalNameChanging(value);
+					this.SendPropertyChanging();
+					this._AnimalName = value;
+					this.SendPropertyChanged("AnimalName");
+					this.OnAnimalNameChanged();
 				}
 			}
 		}

@@ -51,13 +51,29 @@ namespace HumaneSociety
                     CheckAdoptions();
                     RunUserMenus();
                     return;
+                case "5":
+                    DisplayRooms();
+                    RunUserMenus();
+                    return;
+                case "6":
+                    MoveAnimal();
+                    RunUserMenus();
+                    return;
                 default:
                     UserInterface.DisplayUserOptions("Input not accepted please try again");
                     RunUserMenus();
                     return;
             }
         }
+        private void MoveAnimal()
+        {
 
+        }
+        private void DisplayRooms()
+        {
+            var rooms = Query.DisplayRooms();
+            UserInterface.DisplayAnimals(rooms);
+        }
         private void CheckAdoptions()
         {
             Console.Clear();
@@ -78,7 +94,6 @@ namespace HumaneSociety
             }
 
         }
-
         private void ApproveAdoption(Adoption adoption)
         {
             UserInterface.DisplayAnimalInfo(adoption.Animal);

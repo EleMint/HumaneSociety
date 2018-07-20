@@ -96,7 +96,13 @@ namespace HumaneSociety
                 Console.WriteLine(animal.AnimalId + " " + animal.Name + " " + animal.Species.Name);
             }
         }
-
+        internal static void DisplayAnimals(List<Room> rooms)
+        { 
+            foreach(Room room in rooms)
+            {
+                //Console.WriteLine($"Room Number: {room.RoomId}  AnimalId: {room.AnimalId}  Animal: {room.}");
+            }
+        }
         internal static int GetIntegerData()
         {
             try

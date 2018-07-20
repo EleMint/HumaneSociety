@@ -284,6 +284,11 @@ namespace HumaneSociety
             var returnDietPlan = db.DietPlans.Where(d => d.Name == dietPlan).Single();
             return returnDietPlan;
         }
+        public static List<Room> DisplayRooms()
+        {
+            var animalRooms = db.Rooms;
+            return animalRooms.ToList();
+        }
         public static void AddAnimal(Animal animal)
         {
             db.Animals.InsertOnSubmit(animal);
